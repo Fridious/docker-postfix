@@ -115,11 +115,18 @@ fi
 #  echo "Setting configuration option OVERWRITE_FROM with value: ${OVERWRITE_FROM}"
 #fi
 
-if [ ! -z "${HEADER_CHECKS}" ]; then
-  echo -e $HEADER_CHECKS > /etc/postfix/smtp_header_checks
+if [ ! -z "${SMTP_HEADER_CHECKS}" ]; then
+  echo -e $SMTP_HEADER_CHECKS > /etc/postfix/smtp_header_checks
   postmap /etc/postfix/smtp_header_checks
   postconf -e 'smtp_header_checks = regexp:/etc/postfix/smtp_header_checks'
-  echo "Setting configuration option HEADER_CHECKS with value: ${HEADER_CHECKS}"
+  echo "Setting configuration option SMTP_HEADER_CHECKS with value: ${SMTP_HEADER_CHECKS}"
+fi
+
+if [ ! -z "${MIME_HEADER_CHECKS}" ]; then
+  echo -e $MIME_HEADER_CHECKS > /etc/postfix/mime_header_checks
+  postmap /etc/postfix/mime_header_checks
+  postconf -e 'mime_header_checks = regexp:/etc/postfix/mime_header_checks'
+  echo "Setting configuration option MIME_HEADER_CHECKS with value: ${MIME_HEADER_CHECKS}"
 fi
 
 # Set message_size_limit
