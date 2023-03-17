@@ -116,13 +116,7 @@ fi
 #fi
 
 if [ ! -z "${HEADER_CHECKS}" ]; then
-  IFS=','
-
-  for check in ${HEADER_CHECKS}
-  do
-    echo -e "${check}" > /etc/postfix/smtp_header_checks
-  done
-
+  echo -e $(echo $HEADER_CHECKS | sed 's/,/\n/g') > /etc/postfix/smtp_header_checks
   postmap /etc/postfix/smtp_header_checks
   postconf -e 'smtp_header_checks = regexp:/etc/postfix/smtp_header_checks'
   echo "Setting configuration option HEADER_CHECKS with value: ${HEADER_CHECKS}"
