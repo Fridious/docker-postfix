@@ -107,11 +107,25 @@ if [ ! -z "${SMTPUTF8_ENABLE}" ]; then
   echo "Setting configuration option smtputf8_enable with value: ${SMTPUTF8_ENABLE}"
 fi
 
-if [ ! -z "${OVERWRITE_FROM}" ]; then
-  echo -e "/^From:.*$/ REPLACE From: $OVERWRITE_FROM" > /etc/postfix/smtp_header_checks
+# No longer needed because of ${HEADER_CHECKS}
+#if [ ! -z "${OVERWRITE_FROM}" ]; then
+#  echo -e "/^From:.*$/ REPLACE From: $OVERWRITE_FROM" > /etc/postfix/smtp_header_checks
+#  postmap /etc/postfix/smtp_header_checks
+#  postconf -e 'smtp_header_checks = regexp:/etc/postfix/smtp_header_checks'
+#  echo "Setting configuration option OVERWRITE_FROM with value: ${OVERWRITE_FROM}"
+#fi
+
+if [ ! -z "${HEADER_CHECKS}" ]; then
+  IFS=','
+
+  for check in ${HEADER_CHECKS}
+  do
+    echo -e "${check}" > /etc/postfix/smtp_header_checks
+  done
+
   postmap /etc/postfix/smtp_header_checks
   postconf -e 'smtp_header_checks = regexp:/etc/postfix/smtp_header_checks'
-  echo "Setting configuration option OVERWRITE_FROM with value: ${OVERWRITE_FROM}"
+  echo "Setting configuration option HEADER_CHECKS with value: ${HEADER_CHECKS}"
 fi
 
 # Set message_size_limit
